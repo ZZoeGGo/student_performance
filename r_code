@@ -1,0 +1,12 @@
+data("MathAchieve", package = "MEMSS")
+library(nlme)
+a = lme(MathAch ~ Minority + SES, random =~1 | School,
+         data = MathAchieve,
+        method ="REML")
+a.fixed = gls(MathAch ~ Minority + SES,
+         data = MathAchieve,
+         method = "REML")
+summary(a$modelStruct)
+a$sigma
+a.fixed$sigma
+knitr::kable(summary(a)$tTable[, -3], digits = 3)
