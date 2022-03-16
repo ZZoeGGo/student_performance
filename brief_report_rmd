@@ -1,0 +1,39 @@
+# Qestion 1: Math
+
+## Brief Report
+
+This report analyzes the "MathAchievement" data set associated with "Mathematics achievement scores" from MEMSS package. To the dependent variable "MathAch"(math achievement scores), besides two fixed effects: factor "Minority"(with level Yes or No) and variable "SES"(numeric vector of socio-economic status), the factor "School" is treated as a random effect. The reason for treating "School" as a random effect is we are interest in the differences between different schools whereas treating as fixed effects would be holding for it.
+
+The table following shows the results of fixed effects under "School" as random effect. The students who are members of minority racial group are significantly gain less mathematic scores than the others, while the ones with higher socio-economic status achieve higher scores clearly than other students. 
+
+We test the random effect in the model to answer whether the difference within shools as big as the differences between students from different schools. By comparing the first mixed model to the second model with only fixed effects, in which the variance of first model is smaller than the second model. This concludes that the differences between schools is not as big as the differences beween students from difference schools.
+
+
+```{r MathAchieve , echo=FALSE,results='hold'}
+data("MathAchieve", package = "MEMSS")
+library(nlme)
+a = lme(MathAch ~ Minority + SES, random =~1 | School,
+         data = MathAchieve,
+        method ="REML")
+a.fixed = gls(MathAch ~ Minority + SES,
+         data = MathAchieve,
+         method = "REML")
+knitr::kable(summary(a)$tTable[, -3], digits = 3, cap = "Results for fixed effects under random effect School to MathAch")
+```
+
+## Appendix
+The r codes for modling is attached:
+```{r , eval=FALSE}
+data("MathAchieve", package = "MEMSS")
+library(nlme)
+a = lme(MathAch ~ Minority + SES, random =~1 | School,
+         data = MathAchieve,
+        method ="REML")
+a.fixed = gls(MathAch ~ Minority + SES,
+         data = MathAchieve,
+         method = "REML")
+summary(a$modelStruct)
+a$sigma
+a.fixed$sigma
+knitr::kable(summary(a)$tTable[, -3], digits = 3)
+```
